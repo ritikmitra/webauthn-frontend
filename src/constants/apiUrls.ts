@@ -1,7 +1,9 @@
 export const API_URLS = {
-    REGISTER_OPTIONS: '/generate-registration-options',
+    GENERATE_REGISTER_OPTIONS: '/generate-registration-options',
     VERIFY_REGISTRATION: '/verify-registration',
-    LOGIN_OPTIONS: '/generate-authentication-options',
-    VERIFY_LOGIN: '/verify-authentication',
+    GENERATE_AUTHENTICATION_OPTIONS: '/generate-authentication-options',
+    VERIFY_AUTHENTICATION: '/verify-authentication',
+    SIMPLE_LOGIN: '/login',
+    SIMPLE_REGISTER: '/register'
   };
   

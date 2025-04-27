@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'https://your-backend-domain.com', 
+  baseURL: import.meta.env.VITE_API_BASE_URL, 
   withCredentials: true,
 });
 
