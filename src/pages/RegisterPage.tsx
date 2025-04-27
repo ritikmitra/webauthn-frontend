@@ -22,6 +22,7 @@ const RegisterPage = () => {
       navigate('/login');
     } catch (error) {
       console.error('Normal registration failed:', error);
+      toast.error('Registration failed. Please check your credentials.');
     } finally {
       setLoading(false);
     }
@@ -38,7 +39,7 @@ const RegisterPage = () => {
       const response = await generateRegisterUser(email);
       const { options } = response.data;
 
-      const attestationResponse = await startRegistration(options);
+      const attestationResponse = await startRegistration({optionsJSON: options});
 
       if (!attestationResponse) {
         console.error('User canceled the WebAuthn registration');
@@ -49,6 +50,8 @@ const RegisterPage = () => {
       navigate('/login');
     } catch (error) {
       console.error('Passkey registration failed:', error);
+      toast.error(`Passkey login failed ${JSON.stringify(error)}`); 
+
     } finally {
       setLoading(false);
     }

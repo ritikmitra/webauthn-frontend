@@ -26,6 +26,7 @@ const LoginPage = () => {
       navigate('/dashboard');
     } catch (error) {
       console.error('Normal login failed:', error);
+      toast.error('Login failed. Please check your credentials.');
     } finally {
       setLoading(false);
     }
@@ -51,10 +52,10 @@ const LoginPage = () => {
 
       await verifyLoginUser(email, assertionResponse);
       toast.success('Login successful!');
-      console.log(response);
+      login(response.data.token);
       navigate('/dashboard');
     } catch (error) {
-      toast.error('Passkey login failed:' );
+      toast.error(`Passkey login failed ${error}`); 
       console.error('Passkey login failed:', error);
     } finally {
       setLoading(false);
