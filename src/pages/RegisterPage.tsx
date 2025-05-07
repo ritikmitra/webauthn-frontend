@@ -39,6 +39,12 @@ const RegisterPage = () => {
       const response = await generateRegisterUser(email);
       const { options } = response.data;
 
+      if (response.status === 400){
+        console.error('Passkey registration failed:', response.data.message);
+        toast.error(response.data.message);
+        return;
+      }
+
       const attestationResponse = await startRegistration({optionsJSON: options});
 
       if (!attestationResponse) {
