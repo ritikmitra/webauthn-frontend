@@ -3,7 +3,9 @@ import { API_URLS } from '../constants/apiUrls';
 import { RegistrationResponseJSON, AuthenticationResponseJSON } from '@simplewebauthn/browser';
 
 export const generateRegisterUser = (username: string) => {
-    return apiClient.post(API_URLS.GENERATE_REGISTER_OPTIONS, { username });
+    return apiClient.post(API_URLS.GENERATE_REGISTER_OPTIONS, { username },{
+        validateStatus : (status) => status < 500
+    });
 };
 
 export const verifyRegistrationUser = (username: string, attestationResponse: RegistrationResponseJSON) => {

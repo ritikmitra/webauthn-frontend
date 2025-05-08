@@ -37,13 +37,27 @@ const RegisterPage = () => {
     setLoading(true);
     try {
       const response = await generateRegisterUser(email);
-      const { options } = response.data;
+
+      console.log(response.status);
+      
+
 
       if (response.status === 400){
         console.error('Passkey registration failed:', response.data.message);
         toast.error(response.data.message);
         return;
       }
+      if (response.status === 409){
+        console.error('Passkey registration failed:', response.data.message);
+        console.log(response);
+        toast.error(response.data.message);
+      }
+
+      const { options } = response.data;
+
+      console.log(response.data);
+      
+
 
       const attestationResponse = await startRegistration({optionsJSON: options});
 
@@ -56,6 +70,7 @@ const RegisterPage = () => {
       navigate('/login');
     } catch (error) {
       console.error('Passkey registration failed:', error);
+     
       toast.error(`Passkey login failed ${JSON.stringify(error)}`); 
 
     } finally {
