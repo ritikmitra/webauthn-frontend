@@ -29,6 +29,8 @@ const RegisterPage = () => {
   };
 
   const handlePasskeyRegister = async () => {
+
+    let options
     if (!email) {
       toast.error('Please enter your email to use Passkey registration.');
       return;
@@ -38,9 +40,7 @@ const RegisterPage = () => {
     try {
       const response = await generateRegisterUser(email);
 
-      console.log(response.status);
-      
-
+      options  = response.data.options;
 
       if (response.status === 400){
         console.error('Passkey registration failed:', response.data.message);
@@ -51,12 +51,8 @@ const RegisterPage = () => {
         console.error('Passkey registration failed:', response.data.message);
         console.log(response);
         toast.error(response.data.message);
+        options = response.data.data;
       }
-
-      const { options } = response.data;
-
-      console.log(response.data);
-      
 
 
       const attestationResponse = await startRegistration({optionsJSON: options});
@@ -94,6 +90,7 @@ const RegisterPage = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            autoComplete='email webauthn'
           />
         </div>
 
@@ -108,6 +105,7 @@ const RegisterPage = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            autoComplete='current-password webauthn'
           />
         </div>
 

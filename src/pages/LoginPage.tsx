@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { generateAuthenticationLoginUser, verifyLoginUser, loginUser } from '../api/authApi';
-import { startAuthentication } from '@simplewebauthn/browser';
+import { startAuthentication, browserSupportsWebAuthn } from '@simplewebauthn/browser';
 import { useAuth } from '../auth';
 import toast from 'react-hot-toast';
 
@@ -12,6 +12,21 @@ const LoginPage = () => {
 
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    async function checkWebathnSupport() {
+      const isWebAuthnSupported = await browserSupportsWebAuthn();
+      if (!isWebAuthnSupported) {
+        toast.error('Your browser does not support WebAuthn.');
+      }
+
+    }
+
+    checkWebathnSupport();
+  }, [email]);
+
+
+
 
   const handleNormalLogin = async () => {
     if (!email || !password) {
@@ -32,6 +47,7 @@ const LoginPage = () => {
     }
   };
 
+
   const handlePasskeyLogin = async () => {
     if (!email) {
       toast.error('Please enter your email to use Passkey login.');
@@ -43,7 +59,7 @@ const LoginPage = () => {
       const response = await generateAuthenticationLoginUser(email);
       const { options } = response.data;
 
-      const assertionResponse = await startAuthentication({optionsJSON: options});
+      const assertionResponse = await startAuthentication({ optionsJSON: options, useBrowserAutofill: true });
 
       if (!assertionResponse) {
         toast.error('User canceled the WebAuthn prompt');
@@ -51,11 +67,12 @@ const LoginPage = () => {
       }
 
       await verifyLoginUser(email, assertionResponse);
+
       toast.success('Login successful!');
       login(response.data.token);
       navigate('/dashboard');
     } catch (error) {
-      toast.error(`Passkey login failed ${error}`); 
+      toast.error(`Passkey login failed ${error}`);
       console.error('Passkey login failed:', error);
     } finally {
       setLoading(false);
@@ -72,7 +89,7 @@ const LoginPage = () => {
             Email
           </label>
           <input
-            type="email"
+            type="username"
             id="email"
             className="mt-2 p-2 w-full border border-gray-300 rounded-md text-black"
             value={email}
@@ -93,6 +110,7 @@ const LoginPage = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            autoComplete='webauthn'
           />
         </div>
 
